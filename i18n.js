@@ -31,8 +31,6 @@ function i18nRedirect() {
       redirectLang = defaultLang
     }
 
-    //FIXME: Redirect to root if empty defaultLang
-
     // set redirect boolean on local storage
     localStorage.setItem("isRedirected", true)
 
@@ -75,8 +73,14 @@ function i18nRedirect() {
     // compute redirect path
     let redirectPath = pagePath.replace(replaceRE, replaceFormat)
 
+    // edge cases
+    // redirect from alternate language to default at root
+    if (redirectLang == "") {
+      redirectPath = pagePath.replace(/\/.*\/(.*)/, `/$1`) // just trim the i18n section
+    }
+
+    // insert baseURL on path
     if (baseURL != "") {
-      // insert baseURL on path
       redirectPath = redirectPath.replace(/^\/(.*)$/, `/${baseURL}$1`)
     }
 
